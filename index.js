@@ -10,6 +10,7 @@ import Root from './containers/Root'
 import configureStore from './store/configureStore'
 import rootSaga from './sagas'
 
+// run saga
 const store = configureStore(window.__INITIAL_STATE__)
 store.runSaga(rootSaga)
 
