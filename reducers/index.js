@@ -1,6 +1,7 @@
 import * as ActionTypes from '../actions'
 import { merge } from 'lodash/object'
 import paginate from './paginate'
+import shici from './shici'
 import { combineReducers } from 'redux'
 
 // Updates an entity cache in response to any action with response.entities.
@@ -56,6 +57,7 @@ function router(state = { pathname: '/' }, action) {
 
 const rootReducer = combineReducers({
   entities,
+  shici,
   pagination,
   errorMessage,
   router

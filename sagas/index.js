@@ -1,11 +1,11 @@
 /* eslint-disable no-constant-condition */
 import { take, put, call, fork, select, all } from 'redux-saga/effects'
-import { api, history } from '../services'
+import { api, history, shici as shiciApi } from '../services'
 import * as actions from '../actions'
 import { getUser, getRepo, getStarredByUser, getStargazersByRepo } from '../reducers/selectors'
 
 // each entity defines 3 creators { request, success, failure }
-const { user, repo, starred, stargazers } = actions
+const { user, repo, starred, stargazers, shici: shiciAction } = actions
 
 // url for first page
 // urls for next pages will be extracted from the successive loadMore* requests
@@ -34,6 +34,7 @@ export const fetchUser       = fetchEntity.bind(null, user, api.fetchUser)
 export const fetchRepo       = fetchEntity.bind(null, repo, api.fetchRepo)
 export const fetchStarred    = fetchEntity.bind(null, starred, api.fetchStarred)
 export const fetchStargazers = fetchEntity.bind(null, stargazers, api.fetchStargazers)
+export const shici = fetchEntity.bind(null, shiciAction, shiciApi.changeShici)
 
 // load user unless it is cached
 function* loadUser(login, requiredFields) {
@@ -41,6 +42,11 @@ function* loadUser(login, requiredFields) {
   if (!user || requiredFields.some(key => !user.hasOwnProperty(key))) {
     yield call(fetchUser, login)
   }
+}
+
+// change shici
+function* changeShici() {
+  yield call(shici)
 }
 
 // load repo unless it is cached
@@ -119,12 +125,19 @@ function* watchLoadMoreStargazers() {
   }
 }
 
+function* watchShiciChange() {
+  while(true) {
+    yield fork(changeShici)
+  }
+}
+
 export default function* root() {
   yield all([
     fork(watchNavigate),
     fork(watchLoadUserPage),
     fork(watchLoadRepoPage),
     fork(watchLoadMoreStarred),
-    fork(watchLoadMoreStargazers)
+    fork(watchLoadMoreStargazers),
+    fork(watchShiciChange)
   ])
 }

@@ -14,6 +14,9 @@ export const USER = createRequestTypes('USER')
 export const REPO = createRequestTypes('REPO')
 export const STARRED = createRequestTypes('STARRED')
 export const STARGAZERS = createRequestTypes('STARGAZERS')
+// 切换诗词
+export const SHICI = createRequestTypes('SHICI')
+
 
 export const UPDATE_ROUTER_STATE = 'UPDATE_ROUTER_STATE'
 export const NAVIGATE =  'NAVIGATE'
@@ -22,6 +25,8 @@ export const LOAD_REPO_PAGE = 'LOAD_REPO_PAGE'
 export const LOAD_MORE_STARRED = 'LOAD_MORE_STARRED'
 export const LOAD_MORE_STARGAZERS = 'LOAD_MORE_STARGAZERS'
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE'
+export const CHANG_SHICI_RESP = 'CHANG_SHICI_RESP'
+export const CHANG_SHICI = 'CHANG_SHICI'
 
 
 function action(type, payload = {}) {
@@ -52,11 +57,20 @@ export const stargazers = {
   failure: (fullName, error) => action(STARGAZERS[FAILURE], {fullName, error}),
 }
 
+export const shici = {
+  request: () => action(SHICI[REQUEST], {}),
+  success: (response) => action(SHICI[SUCCESS], {response}),
+  failure: (error) => action(SHICI[FAILURE], {error}),
+}
+
 export const updateRouterState = state => action(UPDATE_ROUTER_STATE, {state})
 export const navigate = pathname => action(NAVIGATE, {pathname})
 export const loadUserPage = (login, requiredFields = []) => action(LOAD_USER_PAGE, {login, requiredFields})
 export const loadRepoPage = (fullName, requiredFields = []) => action(LOAD_REPO_PAGE, {fullName, requiredFields})
 export const loadMoreStarred = login => action(LOAD_MORE_STARRED, {login})
 export const loadMoreStargazers = fullName => action(LOAD_MORE_STARGAZERS, {fullName})
+
+export const changeShici = () => action(CHANG_SHICI, {})
+export const changeShiciResp = shici => action(CHANG_SHICI_RESP, {shici})
 
 export const resetErrorMessage = () => action(RESET_ERROR_MESSAGE)
